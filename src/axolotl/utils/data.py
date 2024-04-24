@@ -154,11 +154,11 @@ def load_tokenized_prepared_datasets(
             ds: Union[Dataset, DatasetDict] = None
             ds_from_hub = False
             try:
-                load_dataset(
+                load_from_disk(
                     config_dataset.path,
-                    name=config_dataset.name,
-                    streaming=True,
-                    token=use_auth_token,
+                    # name=config_dataset.name,
+                    # streaming=True,
+                    # token=use_auth_token,
                 )
                 ds_from_hub = True
             except (FileNotFoundError, ConnectionError):
@@ -169,12 +169,12 @@ def load_tokenized_prepared_datasets(
             if local_path.exists():
                 if local_path.is_dir():
                     # TODO dirs with arrow or parquet files could be loaded with `load_from_disk`
-                    ds = load_dataset(
+                    ds = load_from_disk(
                         config_dataset.path,
-                        name=config_dataset.name,
-                        data_files=config_dataset.data_files,
-                        streaming=False,
-                        split=None,
+                        # name=config_dataset.name,
+                        # data_files=config_dataset.data_files,
+                        # streaming=False,
+                        # split=None,
                     )
                 elif local_path.is_file():
                     ds_type = "json"
@@ -284,7 +284,7 @@ def load_tokenized_prepared_datasets(
         if len(datasets) > 1:
             LOG.info("shuffle merged datasets")
             dataset = dataset.shuffle(seed=seed)
-        if cfg.local_rank == 0:
+        if cfg.local_rank == 0 and False:
             LOG.info(f"Saving merged prepared dataset to disk... {prepared_ds_path}")
             dataset.save_to_disk(prepared_ds_path)
             if cfg.push_dataset_to_hub:
@@ -395,7 +395,7 @@ def load_prepare_datasets(
                 ]
             )
 
-            if cfg.local_rank == 0:
+            if cfg.local_rank == 0 and False:
                 LOG.info(
                     f"Saving packed prepared dataset to disk... {prepared_ds_path}"
                 )

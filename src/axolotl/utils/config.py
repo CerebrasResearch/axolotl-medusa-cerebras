@@ -385,6 +385,8 @@ def validate_config(cfg):
             "If you want to full finetune, please turn off load_in_8bit and load_in_4bit."
         )
 
+    if cfg.hydra:
+        print("====== USING HYDRA HEADS INSTEAD OF MEDUSA HEADS ======")
     # TODO
     # MPT 7b
     # https://github.com/facebookresearch/bitsandbytes/issues/25

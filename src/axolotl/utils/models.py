@@ -28,6 +28,7 @@ from axolotl.utils.dict import DictDefault
 from axolotl.monkeypatch.medusa_utils import (
     replace_compute_loss,
     add_medusa_heads,
+    add_hydra_heads,
     replace_create_optimizer,
 )
 
@@ -539,12 +540,18 @@ def load_model(
         LOG.info(
             f"using Medusa with {cfg.medusa_num_heads} heads, {cfg.medusa_num_layers} layers, {cfg.medusa_decay_coefficient} decay coefficient, {cfg.medusa_heads_coefficient} heads coefficient, {cfg.medusa_scheduler} scheduler, {cfg.medusa_logging} logging"
         )
-
-        add_medusa_heads(
-            model,
-            medusa_num_heads=cfg.medusa_num_heads,
-            medusa_num_layers=cfg.medusa_num_layers,
-        )
+        if cfg.hydra:
+            add_hydra_heads(
+                model,
+                medusa_num_heads=cfg.medusa_num_heads,
+                medusa_num_layers=cfg.medusa_num_layers,
+            )
+        else:
+            add_medusa_heads(
+                model,
+                medusa_num_heads=cfg.medusa_num_heads,
+                medusa_num_layers=cfg.medusa_num_layers,
+            )
 
         replace_compute_loss(
             medusa_heads_coefficient=cfg.medusa_heads_coefficient,
